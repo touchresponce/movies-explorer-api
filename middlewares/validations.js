@@ -19,7 +19,7 @@ const validationLogin = celebrate({
 
 const validationCreateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -27,8 +27,8 @@ const validationCreateUser = celebrate({
 
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
-    name: Joi.string().min(2).max(30).required(),
   }),
 });
 

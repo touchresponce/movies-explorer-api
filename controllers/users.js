@@ -69,15 +69,19 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { email, name } = req.body;
 
-  return User.findByIdAndUpdate(
-    req.user._id,
-    { email, name },
-    { new: true, runValidators: true },
-  )
-    .orFail(() => {
-      throw new NotFound('Пользователь с указанным _id не найден');
+  return User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new ConflictError('Пользователь с данным email уже существует');
+      } else {
+        return User.findByIdAndUpdate(
+          req.user._id,
+          { email, name },
+          { new: true, runValidators: true },
+        )
+          .then((x) => res.send(x));
+      }
     })
-    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
