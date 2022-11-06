@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const handleError = require('./middlewares/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/rateLimiter');
@@ -18,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 app.use(cors());
 
 app.use(requestLogger);
+app.use(helmet());
 app.use(limiter);
 app.use(require('./routes'));
 
