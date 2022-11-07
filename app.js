@@ -9,12 +9,18 @@ const handleError = require('./middlewares/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/rateLimiter');
 
-const { PORT = 3000 } = process.env;
+const {
+  PORT = 3000,
+  NODE_ENV,
+  MONGO_URL,
+  DEFAULT_URL = 'mongodb://localhost:27017/bitfilmsdb',
+} = process.env;
+
 const app = express();
 
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : DEFAULT_URL);
 
 app.use(cors());
 
